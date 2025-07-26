@@ -1,0 +1,4 @@
+rootProject.name = 'online-course-platform'
+//include ':user-ms',':course-ms'
+include ':user-ms'
+include ':course-ms'

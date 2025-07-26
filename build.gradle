@@ -1,0 +1,16 @@
+allprojects {
+	apply plugin: "java"
+
+	group = 'com.course.platform'
+	version = '0.0.1-SNAPSHOT'
+
+	repositories {
+		mavenCentral()
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+}
