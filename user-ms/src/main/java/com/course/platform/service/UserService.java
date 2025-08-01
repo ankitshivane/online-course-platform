@@ -13,4 +13,7 @@ public interface UserService {
     UserDto createUser(UserDto userDto);
     void deleteUser(Long id);
     Page<User> searchUser(SearchRequest userDto);
+
+    UserDto editUser(UserDto userDto);
+    String makeCallToCourse(Long courseId);
 }

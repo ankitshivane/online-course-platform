@@ -18,11 +18,12 @@ public class SwaggerConfig {
                         .description("API documentation for the User Service"));
     }
 
-    @Bean
+   /* @Bean
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
             .group("users")
-            .pathsToMatch("/api/users/**","/api/search/user-projection/**")
+//            .pathsToMatch("/api/users/**","/api/search/user-projection/**")
+                            .pathsToMatch("/**")
             .build();
-    }
+    }*/
 }

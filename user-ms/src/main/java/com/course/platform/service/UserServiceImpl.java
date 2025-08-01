@@ -1,5 +1,6 @@
 package com.course.platform.service;
 
+import com.course.platform.client.CourseClient;
 import com.course.platform.entity.Role;
 import com.course.platform.entity.User;
 import com.course.platform.exception.ResourceNotFoundException;
@@ -10,13 +11,11 @@ import com.course.platform.repository.UserRepository;
 import com.course.platform.specification.SearchSpecification;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +38,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Cacheable(value = "User",key = "#id")
     public UserDto getUserById(Long id) {
         User user = userRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
@@ -75,6 +75,29 @@ public class UserServiceImpl implements UserService{
         PageRequest pageRequest = PageRequest.of(req.getPageNumber()-1, req.getPageSize());
         Page<User> all = userRepo.findAll(geMyUserBySearch(req), pageRequest);
         return all;
+    }
+
+    @Override
+    public UserDto editUser(UserDto userDto) {
+        User user = userRepo.findById(userDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userDto.getId()));
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        User updated = userRepo.save(user);
+        return mapToDto(updated);
+    }
+
+    @Autowired
+    private CourseClient client;
+
+    @Override
+//    @CircuitBreaker(name = "courseService",fallbackMethod = "getCourseFallback")
+    public String makeCallToCourse(Long courseId) {
+        return client.getCourse(courseId);
+    }
+
+    public String getCourseFallback(Long courseId,Throwable t){
+        return "Review not available at the moment. Please try later.";
     }
 
     private Specification<User> geMyUserBySearch(SearchRequest req) {

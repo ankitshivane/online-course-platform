@@ -29,11 +29,11 @@ public class SearchRequest {
 
     @Min(value = 1,message = "Page Number must be greater than or equal to 1")
     @Schema(description = "Page Number",example = "1")
-    private int pageNumber=1;
+    private int pageNumber;
 
     @Max(value = 10, message = "Default page size must be between 2 and 10")
     @Min(value = 2,message = "Default page size must be between 2 and 10")
     @Schema(description = "Page Size",example = "2")
-    private int pageSize=2;
+    private int pageSize;
 
 }
